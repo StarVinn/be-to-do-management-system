@@ -8,12 +8,8 @@ const { stringify } = require('jade/lib/utils');
 // Get All Users
 router.get('/get-all', async function (req, res) {
   const users = await prisma.user.findMany();
-  if (users.length === 0 || users === null || users === undefined) {
-    {
-      res.status(404).json({ message: 'User Kosong' });
-    }
-    res.json(users);
-  }
+
+  res.json(users);
 });
 
 // Create User
@@ -69,21 +65,12 @@ router.put('/update/:id', async function (req, res) {
 // Delete User
 router.delete('/delete/:id', async function (req, res) {
   const { id } = req.params;
-  const userExist = await prisma.user.findUnique({
+  const users = await prisma.user.delete({
     where: {
       id: parseInt(id),
     },
   });
-  userExist === null
-    ? res.json('User ID Not Found')
-    : async () => {
-        const users = await prisma.user.delete({
-          where: {
-            id: parseInt(id),
-          },
-        });
-        res.send(users);
-      };
+  res.send(users);
 });
 
 module.exports = router;
